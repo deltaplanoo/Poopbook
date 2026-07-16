@@ -1,0 +1,23 @@
+name: Autonomous Local Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout fresh code
+        uses: actions/checkout@v4
+
+      - name: Sync, build, and restart
+        run: |
+          rsync -av --exclude='.git/' --exclude='node_modules/' . /home/delta/Builds/Poopbook/
+          cd /home/delta/Builds/Poopbook
+          npm install
+          npm run build
+          pm2 restart ecosystem.config.cjs --update-env
+          pm2 save
