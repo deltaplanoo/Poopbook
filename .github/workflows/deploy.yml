@@ -19,5 +19,6 @@ jobs:
           cd /home/delta/Builds/Poopbook
           npm install
           npm run build
-          pm2 restart ecosystem.config.cjs --update-env
+          rsync -a --delete build/ pocketbase/pb_public/
+          pm2 restart poopbook-pb --update-env
           pm2 save
