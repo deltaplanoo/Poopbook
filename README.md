@@ -30,9 +30,13 @@ admin UI at <http://127.0.0.1:8090/_/> if you want to poke around.
 
 The login page has "Continue with Google" and "Continue with Apple" buttons
 that call PocketBase's built-in OAuth2 flow — no frontend config needed. Each
-provider must be enabled once per PocketBase instance from the admin UI
-(Settings → Auth providers → `users`), since it requires secrets tied to your
-own developer accounts that shouldn't be committed:
+provider must be enabled once per PocketBase instance from the admin UI, since
+it requires secrets tied to your own developer accounts that shouldn't be
+committed: open <http://127.0.0.1:8090/_/> → **Collections** → `users` →
+the edit/gear icon → **Options** tab → **OAuth2 providers**, toggle the
+provider on, and paste its Client ID/Secret. Until this is done, the login
+buttons will open a blank popup that immediately closes (PocketBase can't
+find a matching provider).
 
 - **Google** — create OAuth client credentials in the
   [Google Cloud Console](https://console.cloud.google.com/apis/credentials)

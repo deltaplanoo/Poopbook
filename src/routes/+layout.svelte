@@ -6,8 +6,8 @@
 	import { onMount } from 'svelte';
 	import { pwaInfo } from 'virtual:pwa-info';
 	import { auth } from '$lib/auth.svelte';
-	import { displayName } from '$lib/utils';
-	import type { UserRecord } from '$lib/types';
+	import { installPrompt } from '$lib/installPrompt.svelte';
+	import Header from '$lib/components/Header.svelte';
 
 	let { children } = $props();
 
@@ -34,6 +34,10 @@
 		}
 	});
 
+	onMount(() => {
+		installPrompt.init();
+	});
+
 	onMount(async () => {
 		if ('serviceWorker' in navigator) {
 			const { registerSW } = await import('virtual:pwa-register');
@@ -55,24 +59,7 @@
 	{@render children()}
 {:else if auth.isLoggedIn}
 	<div class="flex min-h-dvh flex-col">
-		<header
-			class="sticky top-0 z-40 bg-brown-600 pt-[env(safe-area-inset-top)] text-butter-200 shadow-md"
-		>
-			<div class="mx-auto flex h-14 w-full max-w-lg items-center justify-between px-4">
-				<h1 class="text-lg font-bold tracking-tight">💩 PoopBook</h1>
-				<div class="flex items-center gap-3">
-					<span class="max-w-32 truncate text-sm text-butter-300">
-						{displayName(auth.user as UserRecord)}
-					</span>
-					<button
-						class="min-h-9 rounded-lg bg-brown-700 px-3 py-2 text-xs font-semibold text-butter-200 active:bg-brown-800"
-						onclick={() => auth.logout()}
-					>
-						Logout
-					</button>
-				</div>
-			</div>
-		</header>
+		<Header />
 
 		<main class="mx-auto w-full max-w-lg flex-1 px-4 pt-4 pb-28">
 			{@render children()}
