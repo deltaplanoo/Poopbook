@@ -46,12 +46,18 @@
 	}
 
 	function extractError(err: unknown): string {
+		// The PocketBase SDK collapses client-side OAuth2 failures (missing
+		// provider, realtime disconnects, popup errors) into a generic
+		// "Something went wrong." — the real reason survives on originalError.
+		console.error(err);
 		const e = err as {
 			message?: string;
+			originalError?: { message?: string };
 			response?: { data?: Record<string, { message?: string } | undefined> };
 		};
 		const parts: string[] = [];
-		if (e?.message) parts.push(e.message);
+		const primary = e?.originalError?.message || e?.message;
+		if (primary) parts.push(primary);
 		const data = e?.response?.data;
 		if (data) {
 			for (const [field, detail] of Object.entries(data)) {
