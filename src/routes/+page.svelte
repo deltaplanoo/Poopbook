@@ -2,11 +2,16 @@
 	import { onMount } from 'svelte';
 	import { pb } from '$lib/pb';
 	import { auth } from '$lib/auth.svelte';
+	import { installPrompt } from '$lib/installPrompt.svelte';
 	import { fmtDateTime, poopEmojis, haversineDistanceKm, parseDate } from '$lib/utils';
 	import type { Poop } from '$lib/types';
 
 	type GeoStatus = 'locating' | 'ok' | 'error' | 'unsupported';
 	type PlaceSuggestion = { place: string; distanceKm: number };
+
+	// Set the first time a log is saved from this browser, so we only ever
+	// offer the install prompt once, right after that first success.
+	const HAS_LOGGED_FIRST_POOP_KEY = 'poopbook:hasLoggedFirstPoop';
 
 	/** Build a datetime-local value (YYYY-MM-DDTHH:mm) in the user's local timezone. */
 	function toLocalInput(d: Date): string {
@@ -159,6 +164,12 @@
 			clearTimeout(successTimer);
 			successTimer = setTimeout(() => (showSuccess = false), 2500);
 			await Promise.all([loadRecent(), loadPlaceHistory()]);
+
+			const isFirstLog = !localStorage.getItem(HAS_LOGGED_FIRST_POOP_KEY);
+			localStorage.setItem(HAS_LOGGED_FIRST_POOP_KEY, 'true');
+			if (isFirstLog) {
+				installPrompt.prompt();
+			}
 		} catch (err) {
 			saveError = err instanceof Error && err.message ? err.message : 'Could not save. Try again.';
 		} finally {
