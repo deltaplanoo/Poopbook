@@ -11,7 +11,7 @@
 	let passwordConfirm = $state('');
 
 	let loading = $state(false);
-	let oauthLoading = $state<'google' | 'apple' | null>(null);
+	let oauthLoading = $state<'google' | null>(null);
 	let serverError = $state('');
 	let fieldErrors = $state<Partial<Record<'name' | 'email' | 'password' | 'passwordConfirm', string>>>(
 		{}
@@ -90,12 +90,12 @@
 		}
 	}
 
-	async function loginWithOAuth(provider: 'google' | 'apple') {
+	async function loginWithGoogle() {
 		if (busy) return;
 		serverError = '';
-		oauthLoading = provider;
+		oauthLoading = 'google';
 		try {
-			await pb.collection('users').authWithOAuth2({ provider });
+			await pb.collection('users').authWithOAuth2({ provider: 'google' });
 			goto('/', { replaceState: true });
 		} catch (err) {
 			oauthLoading = null;
@@ -258,7 +258,7 @@
 					type="button"
 					class="btn-secondary w-full"
 					disabled={busy}
-					onclick={() => loginWithOAuth('google')}
+					onclick={loginWithGoogle}
 				>
 					<svg viewBox="0 0 18 18" class="size-4 shrink-0" aria-hidden="true">
 						<path
@@ -279,20 +279,6 @@
 						/>
 					</svg>
 					{oauthLoading === 'google' ? 'Connecting…' : 'Continue with Google'}
-				</button>
-
-				<button
-					type="button"
-					class="btn-secondary w-full"
-					disabled={busy}
-					onclick={() => loginWithOAuth('apple')}
-				>
-					<svg viewBox="0 0 384 512" class="size-4 shrink-0 fill-brown-900" aria-hidden="true">
-						<path
-							d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141 4 184.8 4 273.5c0 25.9 4.7 52.6 14.2 80.2 12.6 36.7 58.1 126.7 105.5 125.2 24.9-.6 42.5-17.7 74.9-17.7 31.5 0 47.8 17.7 75.6 17.7 47.9-.7 89-82.4 101-119.3-64.2-30.2-56.5-88.5-56.5-90.9Zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3Z"
-						/>
-					</svg>
-					{oauthLoading === 'apple' ? 'Connecting…' : 'Continue with Apple'}
 				</button>
 			</div>
 		</div>
