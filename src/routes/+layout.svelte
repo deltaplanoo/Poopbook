@@ -8,14 +8,15 @@
 	import { auth } from '$lib/auth.svelte';
 	import { installPrompt } from '$lib/installPrompt.svelte';
 	import Header from '$lib/components/Header.svelte';
+	import { NotebookPen, Map, Trophy, ChartColumn } from '@lucide/svelte';
 
 	let { children } = $props();
 
 	const tabs = [
-		{ href: '/', label: 'Log', icon: '💩' },
-		{ href: '/map', label: 'Map', icon: '🗺️' },
-		{ href: '/leagues', label: 'Leagues', icon: '🏆' },
-		{ href: '/analysis', label: 'Stats', icon: '📊' }
+		{ href: '/', label: 'Log', icon: NotebookPen },
+		{ href: '/map', label: 'Map', icon: Map },
+		{ href: '/leagues', label: 'Leagues', icon: Trophy },
+		{ href: '/analysis', label: 'Stats', icon: ChartColumn }
 	];
 
 	const webManifestLink = $derived(pwaInfo ? pwaInfo.webManifest.linkTag : '');
@@ -71,15 +72,14 @@
 			<div class="mx-auto flex w-full max-w-lg items-stretch justify-around">
 				{#each tabs as tab (tab.href)}
 					{@const active = page.url.pathname === tab.href}
+					{@const Icon = tab.icon}
 					<a
 						href={tab.href}
 						class="flex flex-1 flex-col items-center gap-0.5 py-2.5 text-xs font-semibold transition-colors
 							{active ? 'text-butter-300' : 'text-butter-200/85'}"
 						aria-current={active ? 'page' : undefined}
 					>
-						<span class="text-xl leading-none {active ? '' : 'grayscale-75 opacity-80'}">
-							{tab.icon}
-						</span>
+						<Icon class="size-5" strokeWidth={active ? 2.5 : 2} />
 						{tab.label}
 						<span class="h-0.5 w-8 rounded-full {active ? 'bg-butter-300' : 'bg-transparent'}"
 						></span>
