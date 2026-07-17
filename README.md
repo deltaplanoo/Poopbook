@@ -26,28 +26,22 @@ Create the first admin account when prompted (or via
 `./pocketbase superuser upsert you@example.com yourpassword`), then open the
 admin UI at <http://127.0.0.1:8090/_/> if you want to poke around.
 
-#### Google / Apple login
+#### Google login
 
-The login page has "Continue with Google" and "Continue with Apple" buttons
-that call PocketBase's built-in OAuth2 flow — no frontend config needed. Each
-provider must be enabled once per PocketBase instance from the admin UI, since
-it requires secrets tied to your own developer accounts that shouldn't be
-committed: open <http://127.0.0.1:8090/_/> → **Collections** → `users` →
-the edit/gear icon → **Options** tab → **OAuth2 providers**, toggle the
-provider on, and paste its Client ID/Secret. Until this is done, the login
-buttons will open a blank popup that immediately closes (PocketBase can't
-find a matching provider).
+The login page has a "Continue with Google" button that calls PocketBase's
+built-in OAuth2 flow — no frontend config needed. The provider must be
+enabled once per PocketBase instance from the admin UI, since it requires
+secrets tied to your own developer account that shouldn't be committed:
+open <http://127.0.0.1:8090/_/> → **Collections** → `users` → the edit/gear
+icon → **Options** tab → **OAuth2 providers**, toggle **Google** on, and
+paste its Client ID/Secret. Until this is done, the login button will open a
+blank popup that immediately closes (PocketBase can't find a matching
+provider).
 
-- **Google** — create OAuth client credentials in the
-  [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
-  (type "Web application"). Add
-  `<your-pocketbase-url>/api/oauth2-redirect` as an authorized redirect URI,
-  then paste the Client ID/Secret into PocketBase.
-- **Apple** — create a Services ID + Sign in with Apple key in the
-  [Apple Developer portal](https://developer.apple.com/account/resources/identifiers/list/serviceId),
-  with the same `<your-pocketbase-url>/api/oauth2-redirect` return URL, then
-  paste the generated Client ID/Secret into PocketBase.
-
+Create OAuth client credentials in the
+[Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+(type "Web application"). Add `<your-pocketbase-url>/api/oauth2-redirect` as
+an authorized redirect URI, then paste the Client ID/Secret into PocketBase.
 Do this for both your local instance (`http://127.0.0.1:8090/...`) and your
 production instance — each has a different redirect URL.
 
